@@ -1,0 +1,15 @@
+machinekit@mksocfpga:~/machinekit$ machinekit configs/Fraessteuerung-DE0-Nano/Machinekit-W-Bau-DE0/Machinekit-W-Bau-DE0.ini 
+MACHINEKIT - 0.1
+Machine configuration directory is '/home/machinekit/machinekit/configs/Fraessteuerung-DE0-Nano/Machinekit-W-Bau-DE0'
+Machine configuration file is 'Machinekit-W-Bau-DE0.ini'
+Starting Machinekit...
+io started
+halcmd loadusr io started
+Machinekit-W-Bau-DE0.hal:40: rc=-1
+hal_call_usrfunct(newinst,--config="firmware=socfpga/dtbo/DE0_Nano_SoC_DB25.7I76_7I76_7I76_7I76.dtbo num_encoders=1 num_stepgens=4") failed: -1 - Operation not permittedShutting down and cleaning up Machinekit...
+Cleanup done
+Machinekit terminated with an error.  You can find more information in the log:
+    /home/machinekit/linuxcnc_debug.txt
+and
+    /home/machinekit/linuxcnc_print.txt
+as well as in the output of the shell command 'dmesg' and in the terminal
