@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Name=ALinuxcnc-W-Bau-NG-DEV.desktop
+Exec=linuxcnc /home/linuxcnc/linuxcnc/configs/Linuxcnc-W-Bau-NG-DEV-08-03-2017/Linuxcnc_W-Bau-NG.ini
+Type=Application
+Comment=Desktop Launcher for LinuxCNC config made by PNCconf
+Icon=/usr/share/linuxcnc/linuxcncicon.png
+GenericName=
