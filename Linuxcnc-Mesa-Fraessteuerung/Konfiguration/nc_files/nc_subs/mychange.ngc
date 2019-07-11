@@ -1,0 +1,48 @@
+o<mychange> sub
+
+G21 (use millimeters for length units)
+G90 (absolute distance mode)
+G49 (cancel tool length compensation)
+
+(move to toolchange-position)
+G53 G1 Z0 F2000
+(optional: M5 - turn off spindle or wait for M6 to turn it off)
+(optional: M9 - turn all coolant or wait for M6 to turn it off)
+(G53 G1 X100 Y45 F500)
+
+M6 (use built in M6 behavior)
+#1000 = #5422 (machine is at Z0 in machine coordinates. save relative coordinates #5422 in #1000)
+
+(move to tool length sensor)
+G53 G1 Z0 F2000
+G53 G1 X3 Y52.3 F3000
+G53 G1 Z-100 F1000
+
+(probe - measure tool)
+G91 (incremental distance mode)
+G38.2 Z-80 F150 (measure)
+G1 Z10 F200 (off the switch)
+G90 (absolute distance mode)
+
+(set tool length)
+G43.1 Z[173.661 + #5063 - #1000] (set new tool offset) 
+(#5063 - probe result of Z, 38.7 mm - height of sensor, #1000 relative Z height of G54) 
+(DEBUG,new length is #5063)
+
+(move to save z-height)
+G53 G1 Z0 F2000
+G1 X0 Y0 F3000
+
+o<mychange> endsub
+M2
+
+
+(Information)
+
+(clear toollength_offset with G49!)
+
+(probe_Z in machine coordinates and g54_Z in relative coordinates of workpiece)
+
+(#5063 = probe_Z - g54_Z)
+
+(-> probeZ = #5063 + g54_Z    mit  g54_Z = #1000)
