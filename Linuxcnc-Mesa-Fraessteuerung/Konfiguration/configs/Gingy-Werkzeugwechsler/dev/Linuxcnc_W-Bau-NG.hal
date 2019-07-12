@@ -8,11 +8,22 @@ loadrt hostmot2
 loadrt hm2_pci config=" num_encoders=1 num_pwmgens=0 num_stepgens=5 sserial_port_0=00xxxx" 
 setp   hm2_5i25.0.watchdog.timeout_ns 5000000
 
+loadrt comp 	#(comp for comparison of  min-Spindle speed)
+loadrt and2 count=2 #(and2 for comparison of  min-Spindle speed)
+loadrt message names=spindle-speed-low messages="Your Spindle speed is set to low at 3000 RPM or less" #(Message in case of to low cmd-spindle speed)
+
 addf hm2_5i25.0.read          servo-thread
 addf motion-command-handler   servo-thread
 addf motion-controller        servo-thread
 addf hm2_5i25.0.write         servo-thread
 #addf hm2_5i25.0.pet_watchdog  servo-thread
+
+
+addf comp.0 servo-thread #(comp for comparison of min-Spindle speed)
+addf and2.0 servo-thread #(and2 for comparison of min-Spindle speed)
+addf and2.1 servo-thread #(and2 for Spindle Enable speed)
+addf spindle-speed-low servo-thread
+
 
 # external output signals
 
@@ -145,8 +156,53 @@ net spindle-index-enable      <=>  motion.spindle-index-enable
 
 # ---Setup spindle at speed signals---
 
-sets spindle-at-speed true
+# net spindle-at-speed <= hm2_5i25.0.7i76.0.0.input-15
 
+# ---digital potentionmeter output signals/setup---
+
+setp   hm2_5i25.0.7i76.0.0.spinout-minlim    [SPINDLE_9]OUTPUT_MIN_LIMIT
+setp   hm2_5i25.0.7i76.0.0.spinout-maxlim    [SPINDLE_9]OUTPUT_MAX_LIMIT
+setp   hm2_5i25.0.7i76.0.0.spinout-scalemax  [SPINDLE_9]OUTPUT_SCALE
+
+net spindle-vel-cmd-rpm     	=> hm2_5i25.0.7i76.0.0.spinout
+#net spindle-enable      	=> hm2_5i25.0.7i76.0.0.spinena
+net spindle-cw         		=> hm2_5i25.0.7i76.0.0.spindir
+
+# ---Compare Cmd Spindel speed with feedback of ESC and Min Speed
+
+net spindle-vel-cmd-rpm => comp.0.in1
+
+setp comp.0.in0  [SPINDLE_9]OUTPUT_MIN_LIMIT
+
+net min-speed-limit-comp-out <= comp.0.out
+
+# ---Setup spindle at speed signals---
+
+net min-speed-limit-comp-out => and2.0.in0
+
+net ESC-at-speed <= hm2_5i25.0.7i76.0.0.input-15
+
+net ESC-at-speed => and2.0.in1
+
+net spindle-at-speed <= and2.0.out
+
+# ---Setup spindle at speed signals---
+
+net spindle-enable => and2.1.in1
+
+net min-speed-limit-comp-out => and2.1.in0
+
+net spindle-enable-safe <= and2.1.out
+
+net spindle-enable-safe => hm2_5i25.0.7i76.0.0.spinena
+
+# ---Inform user of to low Spindle speed---
+
+setp spindle-speed-low.edge 0 #this pin should be active low
+
+#net spindle-enable-safe spindle-speed-low.trigger
+
+#net spindle-enable-safe spindle-speed-low.force
 
 #******************************
 # connect miscellaneous signals
