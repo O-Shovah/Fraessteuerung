@@ -1,4 +1,4 @@
-o<messen> sub
+o<messen_werkzeuglaenge> sub
 #1700=50		(Wechsel X Position)
 #1701=50		(Wechsel Y Position)
 #1702=-5		(Wechsel Z Position)
@@ -108,6 +108,6 @@ o104 endif
 o500 endif
 
 
-o<messen> endsub
+o<messen_werkzeuglaenge> endsub
 M2
 
