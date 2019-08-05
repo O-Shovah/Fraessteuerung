@@ -46,14 +46,14 @@ o110 while [#<Durchlauf_Nummer> LE  #<Anzahl_Messungen>]
 #<Durchlauf_Nummer> = [#<Durchlauf_Nummer> + 1]
 
 G38.2 Z-2.0  F25    	 (messen fein)
-;(debug,Ausloesewert #5063)
+(debug,Ausloesewert #5063)
 
 #2004 = [#2004 + #5063]
 
 ;(debug,Stand Sammelvariable #2004)
 
 G38.4 Z2.0 F25
-;(debug,Ausloesewert #5063)
+(debug,Ausloesewert #5063)
 
 G1 Z1.0 F250
 
@@ -76,12 +76,12 @@ o110 endwhile
 (debug,Tastpunkt+NP Verschiebung #2000)
 (debug, NP Verschiebung #5223)
 
-#2011=[#2000-#2002+#2003] 
+#2011=[#2000-#2002] 
 (debug,Deltawert alt zu neu #2011)
 
 ;#2001=[#2000-#2002+#2003](Neu - diff + alt)  
-#2002=[#2000]      	 (Tastpunkt alt merken)
-#2003=[#2011]	   	 (Offset alt merken)
+#2002=[#2000]      	 (Tastpunkt+NP Verschiebung alt merken)
+#2003=[#2011]	   	 (Delta alt merken)
 
 
 #2010 = -125
@@ -90,7 +90,7 @@ o600 if [#2011 LT #2010]
 #2011 = 0
 (debug,Erstes Werkzeug ? )
 (debug, Längenoffset auf 0 gesetzt !)
-(debug, Hinterlegter Tastpunkt #2002)
+(debug, Hinterlegter Tastpunkt+NP Verschiebung #2002)
 o600 endif
 
 
