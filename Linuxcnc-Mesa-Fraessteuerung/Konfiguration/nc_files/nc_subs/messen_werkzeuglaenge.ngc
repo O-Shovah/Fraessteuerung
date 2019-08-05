@@ -34,31 +34,32 @@ G91
 #<Durchlauf_Nummer> = 1
 
 G38.2 Z-65  F500   	 (messen grob)
-G1    Z0.5  F250   	 (frei fahren)	
+G1    Z1.0  F250   	 (frei fahren)	
 (debug, Grobkontakt hergestellt)
 
 (debug, Beginn Feinmesszyklus)
+
 o110 while [#<Durchlauf_Nummer> LE  #<Anzahl_Messungen>]
 
-(debug, Feinmessdurchlauf #<Durchlauf_Nummer>)
+;(debug, Feinmessdurchlauf #<Durchlauf_Nummer>)
 
 #<Durchlauf_Nummer> = [#<Durchlauf_Nummer> + 1]
 
 G38.2 Z-2.0  F25    	 (messen fein)
-(debug,Ausloesewert #5063)
+;(debug,Ausloesewert #5063)
 
 #2004 = [#2004 + #5063]
 
-(debug,Stand Sammelvariable #2004)
+;(debug,Stand Sammelvariable #2004)
 
 G38.4 Z2.0 F25
-(debug,Ausloesewert #5063)
+;(debug,Ausloesewert #5063)
 
-G1 Z0.5 F250
+G1 Z1.0 F250
 
 #2004 = [#2004 + #5063]
 
-(debug,Stand Sammelvariable #2004)
+;(debug,Stand Sammelvariable #2004)
 
 
 o110 endwhile
@@ -72,9 +73,31 @@ o110 endwhile
 (debug,Mittelwert Ausloesewerte #2005)
 
 #2000=[#2005+#5223]	 (Tastpunkt+NP Verschiebung)
-#2001=[#2000-#2002+#2003](Neu - diff + alt)  
+(debug,Tastpunkt+NP Verschiebung #2000)
+(debug, NP Verschiebung #5223)
+
+#2011=[#2000-#2002+#2003] 
+(debug,Deltawert alt zu neu #2011)
+
+;#2001=[#2000-#2002+#2003](Neu - diff + alt)  
 #2002=[#2000]      	 (Tastpunkt alt merken)
-#2003=[#2001]	   	 (Offset alt merken)
+#2003=[#2011]	   	 (Offset alt merken)
+
+
+#2010 = -125
+
+o600 if [#2011 LT #2010]
+#2011 = 0
+(debug,Erstes Werkzeug ? )
+(debug, Längenoffset auf 0 gesetzt !)
+(debug, Hinterlegter Tastpunkt #2002)
+o600 endif
+
+
+
+
+
+
 #2004 = 0            (Sammelvariable zuruecksetzen)
 
 G1 Z5.0 F500       	 (frei fahren)
@@ -82,11 +105,14 @@ G90 G0
 
 ;Neuen Werkzeugoffset setzen
 
-G43.1 Z#2001       	 (TLO set)
+;G43.1 Z#2001       	 (TLO set)
+G43.1 Z#2011       	 (TLO set)
 G53 Z#1800		 (Sichere Z Position)
 G53 Z#1702	   	 (Wechsel Z Position)
 
-(debug, Differenz ist: #2001)
+o601 if [#2011 LT #2010 AND #2011 GT 0]
+(debug, Differenz Werkzeuglaengen ist: #2011)
+o601 endif
 
 (NP wiederhestellen nur G54 bis G59)	
 o100 if[#1900 EQ 540]

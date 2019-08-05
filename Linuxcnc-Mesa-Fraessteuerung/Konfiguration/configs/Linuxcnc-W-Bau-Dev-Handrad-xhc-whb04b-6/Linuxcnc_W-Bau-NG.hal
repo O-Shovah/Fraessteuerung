@@ -232,7 +232,7 @@ net spindle-manual-ccw    halui.spindle.reverse
 net spindle-manual-stop   halui.spindle.stop
 net machine-is-on         halui.machine.is-on
 net jog-speed             halui.jog-speed 
-net MDI-mode              halui.mode.is-mdi
+net pdnt.halui.mode.is-mdi             halui.mode.is-mdi
 
 #  ---coolant signals---
 

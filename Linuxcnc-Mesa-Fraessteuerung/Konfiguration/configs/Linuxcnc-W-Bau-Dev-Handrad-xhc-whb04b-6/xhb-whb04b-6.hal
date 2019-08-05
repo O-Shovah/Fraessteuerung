@@ -83,9 +83,12 @@ net  joint-select-c                  whb.halui.joint.z.select           halui.jo
      
      
 # jog signals for step and continuous mode
-#net pdnt.stepgen.00.maxvel              hpg.stepgen.00.maxvel              whb.stepgen.00.maxvel
-#net pdnt.stepgen.01.maxvel              hpg.stepgen.01.maxvel              whb.stepgen.01.maxvel
-#net pdnt.stepgen.02.maxvel              hpg.stepgen.02.maxvel              whb.stepgen.02.maxvel
+
+
+net pdnt.stepgen.00.maxvel                            whb.stepgen.00.maxvel
+net pdnt.stepgen.01.maxvel                            whb.stepgen.01.maxvel
+net pdnt.stepgen.02.maxvel                            whb.stepgen.02.maxvel
+
 
 #net pdnt.stepgen.00.position-scale      hpg.stepgen.00.position-scale      whb.stepgen.00.position-scale
 #net pdnt.stepgen.01.position-scale      hpg.stepgen.01.position-scale      whb.stepgen.01.position-scale
@@ -117,6 +120,8 @@ net pdnt.axis.2.jog-vel-mode            whb.axis.2.jog-vel-mode            axis.
 # macro buttons to MDI commands
 #net pdnt.macro.3                        whb.button.macro-3                 halui.mdi-command-03
 
+#net pdnt.halui.mode.manual    whb.button.macro-10 halui.mode.manual
+
 net pdnt.home-all                       whb.halui.home-all                 halui.home-all
 
 # reset, stop, start/pause/resume buttons
@@ -125,10 +130,10 @@ net pdnt.button.stop                    whb.button.stop
 net pdnt.button.start-pause             whb.button.start-pause
 
 # special positions signals
-#net pdnt.button.m-home                  whb.button.m-home                  halui.mdi-command-01
+#net pdnt.button.m-home                  whb.button.m-home                  halui.home-all
 #net pdnt.button.w-home                  whb.button.w-home                  halui.mdi-command-05
-#net pdnt.button.safe-z                  whb.button.safe-z                  halui.mdi-command-00
-#net pdnt.button.probe-z                 whb.button.probe-z                 halui.mdi-command-02
+net pdnt.button.safe-z                  whb.button.safe-z                  halui.mdi-command-00
+net pdnt.button.probe-z                 whb.button.probe-z                 halui.mdi-command-02
 
 # spindle related signals
 net spindle.is-on                       whb.halui.spindle.is-on
@@ -147,11 +152,12 @@ net spindle.velocity.abs-rpm            whb.motion.spindle-speed-abs
 
 # machine mode related signals
 net pdnt.halui.mode.auto                whb.halui.mode.auto                halui.mode.auto
-net pdnt.halui.mode.manual              whb.halui.mode.manual              halui.mode.manual
+net pdnt.halui.mode.manual              whb.button.macro-10              halui.mode.manual
+
 net pdnt.halui.mode.mdi                 whb.halui.mode.mdi                 halui.mode.mdi
 net pdnt.halui.mode.is-auto             halui.mode.is-auto                 whb.halui.mode.is-auto
 net pdnt.halui.mode.is-manual           halui.mode.is-manual               whb.halui.mode.is-manual
-#net pdnt.halui.mode.is-mdi              halui.mode.is-mdi                  whb.halui.mode.is-mdi
+net pdnt.halui.mode.is-mdi              halui.mode.is-mdi                  whb.halui.mode.is-mdi
 
 # feed rate related signals
 net pdnt.halui.feed-override.scale      whb.halui.feed-override.scale      halui.feed-override.scale
