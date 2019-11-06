@@ -107,6 +107,7 @@ G90 G0
 
 ;G43.1 Z#2001       	 (TLO set)
 G43.1 Z#2011       	 (TLO set)
+G10 L1 P#<_selected_tool> Z#2000    (Einlesen des Korrekturwertes in Z in die Werkzeugtabelle) 
 G53 Z#1800		 (Sichere Z Position)
 G53 Z#1702	   	 (Wechsel Z Position)
 
