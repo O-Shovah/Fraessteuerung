@@ -4,11 +4,19 @@ o<manual_toolchange_with_averaged_toolsensor> sub
 ;*********** Commanded Data ******************
 ;Backup of commanded Toolnumber and Pocket
 ;otherwise after the M6 this information is gone!
+;Backup of Coordinate Data
 
 #<choosen_tool> = #<_selected_tool>
 #<choosen_pocket> = #<_selected_pocket>
 ;(debug, #<_selected_tool>)
 ;(debug, #<_selected_pocket>)
+
+#1900 = #<_coord_system>	(Backup Coordinate offset G54 to G59)
+
+;Reset Tool length aggregation Variable
+#2005 = 0
+#2004 = 0
+
 ;*********************************************
 
 
@@ -16,6 +24,7 @@ o<manual_toolchange_with_averaged_toolsensor> sub
 ; we must execute this only in the milltask interpreter
 ; or preview will break, so test for '#<_task>' which is 1 for 
 ; the milltask interpreter and 0 in the UI's
+
 O100 if [#<_task> EQ 0]
         (debug, Task ist Null)
 O100     return [999]
@@ -24,11 +33,22 @@ O100 endif
 ;*********************************************
 
 
+;******* Check for nessecity of toolchange ***
+
+o200 if [#<_current_tool> EQ #<_selected_tool>]
+(debug, Tool already in Spindle)
+M2
+o200 else 
+
+;*********************************************
+
+
+
 ;**** Approaching Tool Change Location *******
 ;Move to Position defined in ini File
 
 ;first move Spindle up
-G53 G0 Z[#<_ini[AXIS_2]MAX_LIMIT>-0.1]
+G53 G0 Z[#<_ini[AXIS_2]MAX_LIMIT>-0.5]
 ; then Planar move to change position
 G53 G0 X[#<_ini[CHANGE_POSITION]X>] Y[#<_ini[CHANGE_POSITION]Y>]
 G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
@@ -36,21 +56,17 @@ G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
 ;*********************************************
 
 
-;******* Check for nessecity of toolchange ***
-o200 if [#<_current_tool> EQ #<_selected_tool>]
-(debug, Tool already in Spindle)
-M2
-o200 else 
-;*********************************************
 
+;** Stop Spindle and call regular M6 Dialog **
 
-;*** Stop Spindle and call regular M6 Dialog *
 M5
 
 G49
 
-M6 T#<_selected_tool>
+M6 T#<choosen_tool>
+
 ;*********************************************
+
 
 ;**** Check for unplausible Parameters ********
 
@@ -76,31 +92,15 @@ G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
 ;**********************************************
 
 
-;testbereich
-;*******************
-;#1900 = #<_coord_system>	(NP merken nur G54 bis G59)
-
-;G54
-;G90 G0 	
-
-;G43.1 Z0	   	 (TLO reset)
-;G91
-
-;***************************
-
-;Reset Tool length Varibale
-#2005 = 0
-#2004 = 0
-
 
 ;*** Coarse Z Position measurement **********
 
 F #<_hal[probe.ps_searchvel]>
 G91
 G38.2 Z #<_ini[TOOLSENSOR]MAXPROBE>
-G1 Z1.5
-(debug, Coarse position aquired)
-(debug, Coase location #5063)
+G1 Z0.25
+(debug, Coarse location aquired)
+(debug, Coarse location #5063)
 ;********************************************
 
 
@@ -138,7 +138,7 @@ G38.2 Z-2.5  F #<_hal[probe.ps_probevel]>
 G38.4 Z2.5 F #<_hal[probe.ps_probevel]>
 ;(debug,Triggervalue #5063)
 
-G1 Z1.5 F #<_hal[probe.ps_searchvel]>
+G1 Z0.25 F #<_hal[probe.ps_searchvel]>
 
 #2004 = [#2004 + #5063]
 
@@ -151,8 +151,9 @@ o610 endwhile
 
 ;*** Return to Change Position **************
 G90
-G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
+G53 G0 Z[#<_ini[AXIS_2]MAX_LIMIT>-0.5]
 G53 G0 X[#<_ini[CHANGE_POSITION]X>] Y[#<_ini[CHANGE_POSITION]Y>]
+G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
 ;********************************************
 
 ;**** Check if Toolsensor triggered *********
@@ -163,7 +164,6 @@ O700 endif
 ;********************************************
 
 ;**** Calculate new Tool Offset *************
-;N
 
 #2005=[#2004/[#<Number_of_cycles> * 2]]
 
@@ -177,9 +177,11 @@ O700 endif
 #2005 = 0
 #2004 = 0
 
-(DEBUG, #<touch_result>  #<probeheight>  #<blockheight>)
+(debug, #<touch_result>  #<probeheight>  #<blockheight>)
+;********************************************
 
 
+;**** Write Tool values to Tooltable ********
 #<result_tooltable> = [#<touch_result> - #<probeheight> + #<blockheight>]
 
 (debug, Written Value #<result_tooltable> )
@@ -187,33 +189,8 @@ O700 endif
 G10 L1 P#<choosen_tool> Z #<result_tooltable>
 G43
 
-;#2000=[#2005+#5223]	 (Tastpunkt+NP Verschiebung)
-;(debug,Tastpunkt+NP Verschiebung #2000)
-;(debug, NP Verschiebung #5223)
-
-;#2011=[#2000-#2002] 
-;(debug,Deltawert alt zu neu #2011)
-
-;#2001=[#2000-#2002+#2003](Neu - diff + alt)  
-;#2002=[#2000]      	 (Tastpunkt+NP Verschiebung alt merken)
-;#2003=[#2011]	   	 (Delta alt merken)
-
-
-;#2010 = -125
-
-;o600 if [#2011 LT #2010]
-;#2011 = 0
-;(debug,Erstes Werkzeug ? )
-;(debug, Längenoffset auf 0 gesetzt !)
-;(debug, Hinterlegter Tastpunkt+NP Verschiebung #2002)
-;o600 endif
-
-
-;o601 if [#2011 LT #2010 AND #2011 GT 0]
-;(debug, Differenz Werkzeuglaengen ist: #2011)
-;o601 endif
-
-(NP wiederhestellen nur G54 bis G59)	
+;********************************************
+(Restore coordinate System G54 to G59)	
 o800 if[#1900 EQ 540]
 G54
 o800 endif
@@ -229,6 +206,7 @@ o803 endif
 o804 if[#1900 EQ 580]
 G58
 o804 endif
+;********************************************
 
 o<manual_toolchange_with_averaged_toolsensor> endsub [1]
 M2

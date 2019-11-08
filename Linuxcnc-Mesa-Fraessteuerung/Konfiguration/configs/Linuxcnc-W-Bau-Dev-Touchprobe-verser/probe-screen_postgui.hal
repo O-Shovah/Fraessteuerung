@@ -3,4 +3,4 @@ net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-chan
 net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
 net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
 
-net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared 
+net tool-prep-loop         iocontrol.0.tool-prepare   <=   iocontrol.0.tool-prepared 
