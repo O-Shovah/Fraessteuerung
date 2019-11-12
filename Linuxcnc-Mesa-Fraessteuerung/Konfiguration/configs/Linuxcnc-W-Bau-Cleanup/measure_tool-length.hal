@@ -1,6 +1,0 @@
-# Include your custom HAL commands here
-# This file will not be overwritten when you run PNCconf again
-
-net probe-in <=  hm2_5i25.0.7i76.0.0.input-03-not
-# Höhe des Toolsensor Auslösepunktes ist 38.695 mm über der T-Nuten Platte
-
