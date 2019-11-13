@@ -1,4 +1,3 @@
-
 # Workspindle 
 # Paramters, RPM Limits and Scale
 
@@ -15,5 +14,5 @@
 #MAX_OUTPUT = 300
 
 OUTPUT_SCALE = 24000.0
-OUTPUT_MIN_LIMIT = 300.0
+OUTPUT_MIN_LIMIT = 500.0
 OUTPUT_MAX_LIMIT = 24000.0

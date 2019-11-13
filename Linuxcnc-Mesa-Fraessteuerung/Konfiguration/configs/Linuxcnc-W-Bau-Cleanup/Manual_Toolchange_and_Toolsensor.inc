@@ -1,7 +1,5 @@
- 
 [RS274NGC]
 FEATURES = 30
-PARAMETER_FILE = linuxcnc.var
 SUBROUTINE_PATH = ngc_routines
 REMAP=M6   modalgroup=6  ngc=manual_toolchange_with_averaged_toolsensor
 
