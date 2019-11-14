@@ -2,6 +2,7 @@
 FEATURES = 30
 SUBROUTINE_PATH = ngc_routines
 REMAP=M6   modalgroup=6  ngc=manual_toolchange_with_averaged_toolsensor
+#REMAP=M6 modalgroup=6 prolog=change_prolog ngc=manual_change epilog=change_epilog
 
 [HAL]
 
@@ -15,8 +16,10 @@ Y = 52
 Z = -25
 # Maximum search distance and direction in Z Axis (with sign)
 MAX_SEARCH_Z_TOOLSENSOR = -150
-# Speed of movements while serching for first Contact with toolsensor
+# Speed of movements while searching for first Contact with toolsensor
 SEARCH_SPEED_Z_TOOLSENSOR = 600
+#Speed of movements while searching for accurate trigger point of toolsensor
+MEASUREMENT_SPEED_Z_TOOLSENSOR = 100
 # Diameter of toolsensor pad 
 DIAMETER_TOOLSENSOR_PAD = 10
 # The speed of the reverse rotation of the spindle when measuring the tool diameter
