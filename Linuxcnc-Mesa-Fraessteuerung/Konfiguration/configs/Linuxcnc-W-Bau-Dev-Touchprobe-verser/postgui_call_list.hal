@@ -2,5 +2,5 @@
 
 source postgui.hal
 
-source probe-screen_postgui.hal
+#source probe-screen_postgui.hal
 

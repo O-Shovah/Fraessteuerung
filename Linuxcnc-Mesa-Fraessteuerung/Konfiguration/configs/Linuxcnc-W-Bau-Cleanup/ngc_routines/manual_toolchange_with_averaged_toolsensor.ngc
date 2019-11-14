@@ -74,11 +74,11 @@ M6 T#<choosen_tool>
 ;O300 return [3] ; indicate no tool measurement 
 ;O300 endif
 
-O400 if [#<_hal[TOOLSENSOR]SEARCH_SPEED_Z_TOOLSENSOR> LE 0]
+O400 if [#<_ini[TOOLSENSOR]SEARCH_SPEED_Z_TOOLSENSOR> LE 0]
 O400 return [-1] ; indicate search velocity <= 0 
 O400 endif
 
-O500 if [#<_hal[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR> LE 0]
+O500 if [#<_ini[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR> LE 0]
 O500 return [-2] ; indicate measuremente velocity <= 0 
 O500 endif
 
@@ -95,10 +95,10 @@ G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
 
 ;*** Coarse Z Position measurement **********
 
-F #<_hal[TOOLSENSOR]SEARCH_SPEED_Z_TOOLSENSOR>
+F #<_ini[TOOLSENSOR]SEARCH_SPEED_Z_TOOLSENSOR>
 G91
 G38.2 Z #<_ini[TOOLSENSOR]MAX_SEARCH_Z_TOOLSENSOR>
-G1 Z0.25
+G1 Z0.5
 (debug, Coarse location aquired)
 (debug, Coarse location #5063)
 ;********************************************
@@ -128,21 +128,22 @@ o610 while [#<Current_Cycle_number> LE  #<Number_of_cycles>]
 
 #<Current_Cycle_number> = [#<Current_Cycle_number> + 1]
 
-G38.2 Z-2.5  F #<_hal[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
-(debug,Triggervalue #5063)
+G38.2 Z-2.5  F #<_ini[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
+;(debug,Triggervalue #5063)
 
 #2004 = [#2004 + #5063]
 
 ;(debug,Value of summ #2004)
 
-G38.4 Z2.5 F #<_hal[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
+G38.4 Z2.5 F #<_ini[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
 ;(debug,Triggervalue #5063)
 
-G1 Z0.25 F #<_hal[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
+G1 Z0.5 F #<_ini[TOOLSENSOR]MEASUREMENT_SPEED_Z_TOOLSENSOR>
+
 
 #2004 = [#2004 + #5063]
 
-(debug,Value of summ #2004)
+;(debug,Value of summ #2004)
 
 o610 endwhile
 
@@ -167,6 +168,7 @@ O700 endif
 
 #2005=[#2004/[#<Number_of_cycles> * 2]]
 
+
 (debug,Average Trigger Value #2005)
 
 #<touch_result> = #2005
@@ -187,7 +189,7 @@ O700 endif
 ;**** Write Tool values to Tooltable ********
 #<result_tooltable> = [#<touch_result> - #<probeheight> + #<blockheight>]
 
-(debug, Written Value #<result_tooltable> )
+(debug, Written Tooltable Value #<result_tooltable> )
 
 G10 L1 P#<choosen_tool> Z #<result_tooltable>
 G43

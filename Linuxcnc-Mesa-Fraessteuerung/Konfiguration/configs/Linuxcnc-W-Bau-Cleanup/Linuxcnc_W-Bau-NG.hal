@@ -13,7 +13,7 @@ addf motion-controller        servo-thread
 addf hm2_5i25.0.write         servo-thread
 #addf hm2_5i25.0.pet_watchdog  servo-thread
 
-
+loadrt or2 count=1
 addf or2.0 servo-thread #(or2) for choosing the probe or toolsensor input
 
 
@@ -45,8 +45,8 @@ setp   hm2_5i25.0.stepgen.00.stepspace       [AXIS_0]STEPSPACE
 setp   hm2_5i25.0.stepgen.00.position-scale  [AXIS_0]STEP_SCALE
 setp   hm2_5i25.0.stepgen.00.step_type        0
 setp   hm2_5i25.0.stepgen.00.control-type     0
-setp   hm2_5i25.0.stepgen.00.maxaccel         [AXIS_0]STEPGEN_MAXACCEL
-setp   hm2_5i25.0.stepgen.00.maxvel           [AXIS_0]STEPGEN_MAXVEL
+setp   hm2_5i25.0.stepgen.00.maxaccel        [AXIS_0]STEPGEN_MAXACCEL
+setp   hm2_5i25.0.stepgen.00.maxvel          [AXIS_0]STEPGEN_MAXVEL
 
 # ---closedloop stepper signals---
 
@@ -149,9 +149,9 @@ net jog-z-neg             halui.jog.2.minus
 net jog-z-analog          halui.jog.2.analog
 net jog-selected-pos      halui.jog.selected.plus
 net jog-selected-neg      halui.jog.selected.minus
-net spindle-manual-cw     halui.spindle.forward
-net spindle-manual-ccw    halui.spindle.reverse
-net spindle-manual-stop   halui.spindle.stop
+#net spindle-manual-cw     halui.spindle.forward
+#net spindle-manual-ccw    halui.spindle.reverse
+#net spindle-manual-stop   halui.spindle.stop
 net machine-is-on         halui.machine.is-on
 net jog-speed             halui.jog-speed 
 net pdnt.halui.mode.is-mdi             halui.mode.is-mdi
@@ -170,15 +170,17 @@ net machine-is-enabled        <=  motion.motion-enabled
 
 #  ---estop signals---
 
-net estop-out     <=  iocontrol.0.user-enable-out
-net estop-out     =>  iocontrol.0.emc-enable-in
+net estop-out     	<=  iocontrol.0.user-enable-out
+net estop-out     	=>  iocontrol.0.emc-enable-in
 
-net 3D-probe-in <=  hm2_5i25.0.7i76.0.0.input-04-not
+net 3D-probe-in		<=  hm2_5i25.0.7i76.0.0.input-04-not
 
 
 # ---probe Interrupt in signal---
 
-net toolsensor-in => or2.0.in0
-net 3D-probe-in => or2.0.1.in1
+net toolsensor-in 	=> or2.0.in0
+net 3D-probe-in 	=> or2.0.in1
 
-or2.0.out     =>  motion.probe-input
+net probe-signal 	<= or2.0.out 
+
+net probe-signal  	=>  motion.probe-input
