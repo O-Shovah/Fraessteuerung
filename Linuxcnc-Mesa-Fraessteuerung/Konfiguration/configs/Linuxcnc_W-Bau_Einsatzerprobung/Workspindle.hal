@@ -18,12 +18,12 @@ addf spindle-speed-low servo-thread
 
 net spindle.start						=>	halui.spindle.start
 net spindle.stop 						=>	halui.spindle.stop
-net spindle.is-on						=>	motion.spindle-on
+net spindle.is-on						<=	motion.spindle-on
 
-net  spindle.forward 					=>	halui.spindle.forward
-net  spindle.reverse            		=>	halui.spindle.reverse
-net  spindle.runs-forward       		=>	motion.spindle-forward
-net  spindle.runs-reverse      			=>	motion.spindle-reverse
+net  spindle.forward						=>	halui.spindle.forward
+net  spindle.reverse           				=>	halui.spindle.reverse
+net  spindle.cw      						=>	motion.spindle-forward
+net  spindle.ccw      					=>	motion.spindle-reverse
 
 net spindle.velocity.cmd-rps        	<=	motion.spindle-speed-out-rps
 net spindle.velocity.cmd-rps-abs    	<=	motion.spindle-speed-out-rps-abs
@@ -51,13 +51,13 @@ setp   hm2_5i25.0.7i76.0.0.spinout-minlim    [SPINDLE_9]OUTPUT_MIN_LIMIT
 setp   hm2_5i25.0.7i76.0.0.spinout-maxlim    [SPINDLE_9]OUTPUT_MAX_LIMIT
 setp   hm2_5i25.0.7i76.0.0.spinout-scalemax  [SPINDLE_9]OUTPUT_SCALE
 
-net spindle-vel-cmd-rpm     => hm2_5i25.0.7i76.0.0.spinout
-#net spindle-enable      	=> hm2_5i25.0.7i76.0.0.spinena
-net spindle-cw         		=> hm2_5i25.0.7i76.0.0.spindir
+net spindle.velocity.cmd-rpm     		=> hm2_5i25.0.7i76.0.0.spinout
+
+net spindle.cw         					=> hm2_5i25.0.7i76.0.0.spindir
 
 # ---Compare Cmd Spindel speed with feedback of ESC and Min Speed
 
-net spindle-vel-cmd-rpm => comp.0.in1
+net spindle.velocity.cmd-rpm  => comp.0.in1
 
 setp comp.0.in0  [SPINDLE_9]OUTPUT_MIN_LIMIT
 
@@ -75,7 +75,7 @@ net spindle-at-speed <= and2.0.out
 
 # ---Setup spindle at speed signals---
 
-net spindle-enable => and2.1.in1
+net spindle.is-on => and2.1.in1
 
 net min-speed-limit-comp-out => and2.1.in0
 

@@ -20,9 +20,9 @@ Z = -25
 # Stoppunkt programiert bei -160
 MAX_SEARCH_Z_TOOLSENSOR = -135
 # Speed of movements while searching for first Contact with toolsensor
-SEARCH_SPEED_Z_TOOLSENSOR = 600
+SEARCH_SPEED_Z_TOOLSENSOR = 500
 #Speed of movements while searching for accurate trigger point of toolsensor
-MEASUREMENT_SPEED_Z_TOOLSENSOR = 100
+MEASUREMENT_SPEED_Z_TOOLSENSOR = 50
 # Diameter of toolsensor pad 
 DIAMETER_TOOLSENSOR_PAD = 10
 # The speed of the reverse rotation of the spindle when measuring the tool diameter

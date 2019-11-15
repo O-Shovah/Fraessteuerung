@@ -92,6 +92,11 @@ G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
 ;**********************************************
 
 
+;**** Set the Z Coordinate Offset to 0 an save it ***
+#<G54-Offset> = #[5213 + [10 * #5220]]
+(debug,G54-Z-Offset #<G54-Offset>)
+G10 L2 P0 Z0
+;****************************************************
 
 ;*** Coarse Z Position measurement **********
 
@@ -111,6 +116,8 @@ O600 return [-3] ; indicate probe contact failure to epilog
 O600 endif
 
 ;********************************************
+
+
 
 ;*** Averaged fine length runs **************
 ;The sensor Trip point is passed multiple times in both directions
@@ -173,6 +180,7 @@ O700 endif
 
 #<touch_result> = #2005
 #<probeheight> = 0
+;-152.220
 #<blockheight> = 0
 
 ;#<probeheight> = #<_hal[probe.probeheight]> 
@@ -185,13 +193,16 @@ O700 endif
 (debug, #<touch_result>  #<probeheight>  #<blockheight>)
 ;********************************************
 
+;*** Set Z-Offset to initial Value **********
+G10 L2 P0 Z #<G54-Offset>
+;********************************************
 
 ;**** Write Tool values to Tooltable ********
 #<result_tooltable> = [#<touch_result> - #<probeheight> + #<blockheight>]
 
 (debug, Written Tooltable Value #<result_tooltable> )
 
-G10 L1 P#<choosen_tool> Z #<result_tooltable>
+G10 L1 P #<choosen_tool> Z #<result_tooltable>
 G43
 
 ;********************************************
@@ -215,4 +226,3 @@ o804 endif
 
 o<manual_toolchange_with_averaged_toolsensor> endsub [1]
 M2
-
