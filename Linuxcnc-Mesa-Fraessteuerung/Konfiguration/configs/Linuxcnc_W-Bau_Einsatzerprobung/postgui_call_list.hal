@@ -1,0 +1,7 @@
+# These files are loaded post GUI, in the order they appear
+
+source Manual_Toolchange_and_Toolsensor.hal
+
+source Workspindle.hal
+
+source postgui.hal
