@@ -57,9 +57,11 @@ G53 G0 Z[#<_ini[TOOLCHANGE_POSITION]Z>]
 
 
 
-;** Stop Spindle and call regular M6 Dialog **
+;** Stop Spindle and Cooling and call regular M6 Dialog **
 
 M5
+
+M9
 
 G49
 
