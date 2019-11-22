@@ -1,0 +1,92 @@
+#*** Setting up the use of the Workspindle *****
+
+loadrt comp 	#(comp for comparison of  min-Spindle speed)
+loadrt and2 count=2 #(and2 for comparison of  min-Spindle speed)
+loadrt message names=spindle-speed-low messages="Your Spindle speed is set to low at 500 RPM or less"
+#(Message in case of to low cmd-spindle speed)
+
+addf comp.0 servo-thread #(comp for comparison of min-Spindle speed)
+addf and2.0 servo-thread #(and2 for comparison of min-Spindle speed)
+addf and2.1 servo-thread #(and2 for Spindle Enable speed)
+addf spindle-speed-low servo-thread
+
+#*******************
+#  SPINDLE_9 S
+#*******************
+
+# ---setup spindle control signals---
+
+net spindle.start						=>	halui.spindle.start
+net spindle.stop 						=>	halui.spindle.stop
+net spindle.is-on						<=	motion.spindle-on
+
+net  spindle.forward						=>	halui.spindle.forward
+net  spindle.reverse           				=>	halui.spindle.reverse
+net  spindle.cw      						=>	motion.spindle-forward
+net  spindle.ccw      					=>	motion.spindle-reverse
+
+net spindle.velocity.cmd-rps        	<=	motion.spindle-speed-out-rps
+net spindle.velocity.cmd-rps-abs    	<=	motion.spindle-speed-out-rps-abs
+net spindle.velocity.cmd-rpm        	<=	motion.spindle-speed-out
+net spindle.velocity.cmd-rpm-abs    	<=	motion.spindle-speed-out-abs
+
+net spindle-at-speed          			=>  motion.spindle-at-speed
+
+net spindle-brake              			<=	motion.spindle-brake
+
+net  spindle.increase                  	=>	halui.spindle.increase
+net  spindle.decrease                   =>	halui.spindle.decrease
+net  spindle.spindle-override.value     =>	halui.spindle-override.value
+net  spindle.spindle-override.increase  =>	halui.spindle-override.increase
+net  spindle.spindle-override.decrease  =>	halui.spindle-override.decrease
+
+net spindle-revs              			=>  motion.spindle-revs
+net spindle.velocity.fb-rps     		=>  motion.spindle-speed-in
+net spindle-index-enable       		   <=>  motion.spindle-index-enable
+
+
+# ---digital potentionmeter output signals/setup---
+
+setp   hm2_5i25.0.7i76.0.0.spinout-minlim    [SPINDLE_9]OUTPUT_MIN_LIMIT
+setp   hm2_5i25.0.7i76.0.0.spinout-maxlim    [SPINDLE_9]OUTPUT_MAX_LIMIT
+setp   hm2_5i25.0.7i76.0.0.spinout-scalemax  [SPINDLE_9]OUTPUT_SCALE
+
+net spindle.velocity.cmd-rpm     		=> hm2_5i25.0.7i76.0.0.spinout
+
+net spindle.cw         					=> hm2_5i25.0.7i76.0.0.spindir
+
+# ---Compare Cmd Spindel speed with feedback of ESC and Min Speed
+
+net spindle.velocity.cmd-rpm  => comp.0.in1
+
+setp comp.0.in0  [SPINDLE_9]OUTPUT_MIN_LIMIT
+
+net min-speed-limit-comp-out <= comp.0.out
+
+# ---Setup spindle at speed signals---
+
+net min-speed-limit-comp-out => and2.0.in0
+
+net ESC-at-speed <= hm2_5i25.0.7i76.0.0.input-15
+
+net ESC-at-speed => and2.0.in1
+
+net spindle-at-speed <= and2.0.out
+
+# ---Setup spindle at speed signals---
+
+net spindle.is-on => and2.1.in1
+
+net min-speed-limit-comp-out => and2.1.in0
+
+net spindle-enable-safe <= and2.1.out
+
+net spindle-enable-safe => hm2_5i25.0.7i76.0.0.spinena
+
+# ---Inform user of to low Spindle speed---
+
+setp spindle-speed-low.edge 0 #this pin should be active low
+
+#net spindle-enable-safe spindle-speed-low.trigger
+
+#net spindle-enable-safe spindle-speed-low.force

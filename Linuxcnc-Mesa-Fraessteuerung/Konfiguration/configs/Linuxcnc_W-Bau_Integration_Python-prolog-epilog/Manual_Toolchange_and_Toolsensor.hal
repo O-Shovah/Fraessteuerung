@@ -1,0 +1,10 @@
+#  ---manual tool change signals---
+
+loadusr -W hal_manualtoolchange
+net tool-change-request     iocontrol.0.tool-change       =>  hal_manualtoolchange.change
+net tool-change-confirmed   iocontrol.0.tool-changed      <=  hal_manualtoolchange.changed
+net tool-number             iocontrol.0.tool-prep-number  =>  hal_manualtoolchange.number
+net tool-prepare-loopback   iocontrol.0.tool-prepare      =>  iocontrol.0.tool-prepared
+
+net toolsensor-in <=  hm2_5i25.0.7i76.0.0.input-03-not
+# Höhe des Toolsensor Auslösepunktes ist 38.695 mm über der T-Nuten Platte

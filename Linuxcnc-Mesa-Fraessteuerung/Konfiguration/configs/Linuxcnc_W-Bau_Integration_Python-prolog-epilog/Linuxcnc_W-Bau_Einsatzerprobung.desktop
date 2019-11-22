@@ -1,0 +1,20 @@
+[Desktop Entry]
+Comment[en_US]=Desktop Launcher for LinuxCNC\s
+Comment=Desktop Launcher for LinuxCNC\s
+Exec=linuxcnc /home/linuxcnc-dev/Fraessteuerung/Linuxcnc-Mesa-Fraessteuerung/Konfiguration/configs/Linuxcnc_W-Bau_Einsatzerprobung/Linuxcnc_W-Bau-NG.ini
+GenericName[en_US]=Linuxcnc umgebaut auf neuen Werkzeugwechsel und aufgeräumte Signale
+GenericName=Linuxcnc umgebaut auf neuen Werkzeugwechsel und aufgeräumte Signale
+Icon=/usr/share/linuxcnc/linuxcncicon.png
+MimeType=
+Name[en_US]=Linuxcnc_W-Bau_Einsatzerprobung.desktop
+Name=Linuxcnc_W-Bau_Einsatzerprobung.desktop
+Path=/home/linuxcnc-dev/Fraessteuerung/Linuxcnc-Mesa-Fraessteuerung/Konfiguration/configs/Linuxcnc_W-Bau_Einsatzerprobung
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

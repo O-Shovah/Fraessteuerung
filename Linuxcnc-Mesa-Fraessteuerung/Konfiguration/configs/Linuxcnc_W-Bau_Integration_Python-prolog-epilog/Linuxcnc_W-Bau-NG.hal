@@ -1,0 +1,186 @@
+#General Configuration of HAL interaction within the Machine
+
+loadrt trivkins
+loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AXES
+loadrt hostmot2
+loadrt hm2_pci config=" num_encoders=1 num_pwmgens=0 num_stepgens=5 sserial_port_0=00xxxx" 
+setp   hm2_5i25.0.watchdog.timeout_ns 5000000
+
+
+addf hm2_5i25.0.read          servo-thread
+addf motion-command-handler   servo-thread
+addf motion-controller        servo-thread
+addf hm2_5i25.0.write         servo-thread
+#addf hm2_5i25.0.pet_watchdog  servo-thread
+
+loadrt or2 count=1
+addf or2.0 servo-thread #(or2) for choosing the probe or toolsensor input
+
+
+# external output signals
+
+net coolant-mist   =>  hm2_5i25.0.7i76.0.0.output-01
+
+# external input signals
+
+# --- MIN-HOME-X ---
+net min-home-x     <=  hm2_5i25.0.7i76.0.0.input-00
+
+# --- MIN-HOME-Y ---
+net min-home-y     <=  hm2_5i25.0.7i76.0.0.input-01
+
+# --- MIN-HOME-Z ---
+net min-home-z     <=  hm2_5i25.0.7i76.0.0.input-02
+
+#*******************
+#  AXIS X
+#*******************
+
+# Step Gen signals/setup
+
+setp   hm2_5i25.0.stepgen.00.dirsetup        [AXIS_0]DIRSETUP
+setp   hm2_5i25.0.stepgen.00.dirhold         [AXIS_0]DIRHOLD
+setp   hm2_5i25.0.stepgen.00.steplen         [AXIS_0]STEPLEN
+setp   hm2_5i25.0.stepgen.00.stepspace       [AXIS_0]STEPSPACE
+setp   hm2_5i25.0.stepgen.00.position-scale  [AXIS_0]STEP_SCALE
+setp   hm2_5i25.0.stepgen.00.step_type        0
+setp   hm2_5i25.0.stepgen.00.control-type     0
+setp   hm2_5i25.0.stepgen.00.maxaccel        [AXIS_0]STEPGEN_MAXACCEL
+setp   hm2_5i25.0.stepgen.00.maxvel          [AXIS_0]STEPGEN_MAXVEL
+
+# ---closedloop stepper signals---
+
+net x-pos-fb     <= hm2_5i25.0.stepgen.00.position-fb
+net x-pos-fb     => axis.0.motor-pos-fb
+net x-pos-cmd    <= axis.0.motor-pos-cmd
+net x-pos-cmd	 => hm2_5i25.0.stepgen.00.position-cmd
+net x-enable     <= axis.0.amp-enable-out
+net x-enable     => hm2_5i25.0.stepgen.00.enable
+
+# ---setup home / limit switch signals---
+
+net min-home-x     =>  axis.0.home-sw-in
+net min-home-x     =>  axis.0.neg-lim-sw-in
+net x-pos-limit    =>  axis.0.pos-lim-sw-in
+
+#*******************
+#  AXIS Y
+#*******************
+
+# Step Gen signals/setup
+
+setp   hm2_5i25.0.stepgen.01.dirsetup        [AXIS_1]DIRSETUP
+setp   hm2_5i25.0.stepgen.01.dirhold         [AXIS_1]DIRHOLD
+setp   hm2_5i25.0.stepgen.01.steplen         [AXIS_1]STEPLEN
+setp   hm2_5i25.0.stepgen.01.stepspace       [AXIS_1]STEPSPACE
+setp   hm2_5i25.0.stepgen.01.position-scale  [AXIS_1]STEP_SCALE
+setp   hm2_5i25.0.stepgen.01.step_type        0
+setp   hm2_5i25.0.stepgen.01.control-type     0
+setp   hm2_5i25.0.stepgen.01.maxaccel        [AXIS_1]STEPGEN_MAXACCEL
+setp   hm2_5i25.0.stepgen.01.maxvel          [AXIS_1]STEPGEN_MAXVEL
+
+# ---closedloop stepper signals---
+
+net y-pos-fb     <= hm2_5i25.0.stepgen.01.position-fb
+net y-pos-fb     => axis.1.motor-pos-fb
+net y-pos-cmd    <= axis.1.motor-pos-cmd
+net y-pos-cmd	 => hm2_5i25.0.stepgen.01.position-cmd
+net y-enable     <= axis.1.amp-enable-out
+net y-enable     => hm2_5i25.0.stepgen.01.enable
+
+# ---setup home / limit switch signals---
+
+net min-home-y     =>  axis.1.home-sw-in
+net min-home-y     =>  axis.1.neg-lim-sw-in
+net y-pos-limit    =>  axis.1.pos-lim-sw-in
+
+#*******************
+#  AXIS Z
+#*******************
+
+# Step Gen signals/setup
+
+setp   hm2_5i25.0.stepgen.02.dirsetup        [AXIS_2]DIRSETUP
+setp   hm2_5i25.0.stepgen.02.dirhold         [AXIS_2]DIRHOLD
+setp   hm2_5i25.0.stepgen.02.steplen         [AXIS_2]STEPLEN
+setp   hm2_5i25.0.stepgen.02.stepspace       [AXIS_2]STEPSPACE
+setp   hm2_5i25.0.stepgen.02.position-scale  [AXIS_2]STEP_SCALE
+setp   hm2_5i25.0.stepgen.02.step_type        0
+setp   hm2_5i25.0.stepgen.02.control-type     0
+setp   hm2_5i25.0.stepgen.02.maxaccel         [AXIS_2]STEPGEN_MAXACCEL
+setp   hm2_5i25.0.stepgen.02.maxvel           [AXIS_2]STEPGEN_MAXVEL
+
+# ---closedloop stepper signals---
+
+net z-pos-fb     <= hm2_5i25.0.stepgen.02.position-fb
+net z-pos-fb     => axis.2.motor-pos-fb
+net z-pos-cmd    <= axis.2.motor-pos-cmd
+net z-pos-cmd	 => hm2_5i25.0.stepgen.02.position-cmd
+net z-enable     <= axis.2.amp-enable-out
+net z-enable     => hm2_5i25.0.stepgen.02.enable
+
+# ---setup home / limit switch signals---
+
+net min-home-z     =>  axis.2.home-sw-in
+net min-home-z     =>  axis.2.neg-lim-sw-in
+net z-pos-limit    =>  axis.2.pos-lim-sw-in
+
+
+#******************************
+# connect miscellaneous signals
+#******************************
+
+#  ---HALUI signals---
+
+net joint-select-a        halui.joint.0.select
+net x-is-homed            halui.joint.0.is-homed
+net jog-x-pos             halui.jog.0.plus
+net jog-x-neg             halui.jog.0.minus
+net jog-x-analog          halui.jog.0.analog
+net joint-select-b        halui.joint.1.select
+net y-is-homed            halui.joint.1.is-homed
+net jog-y-pos             halui.jog.1.plus
+net jog-y-neg             halui.jog.1.minus
+net jog-y-analog          halui.jog.1.analog
+net joint-select-c        halui.joint.2.select
+net z-is-homed            halui.joint.2.is-homed
+net jog-z-pos             halui.jog.2.plus
+net jog-z-neg             halui.jog.2.minus
+net jog-z-analog          halui.jog.2.analog
+net jog-selected-pos      halui.jog.selected.plus
+net jog-selected-neg      halui.jog.selected.minus
+#net spindle-manual-cw     halui.spindle.forward
+#net spindle-manual-ccw    halui.spindle.reverse
+#net spindle-manual-stop   halui.spindle.stop
+net machine-is-on         halui.machine.is-on
+net jog-speed             halui.jog-speed 
+net pdnt.halui.mode.is-mdi             halui.mode.is-mdi
+
+#  ---coolant signals---
+
+net coolant-mist      <=  iocontrol.0.coolant-mist
+net coolant-flood     <=  iocontrol.0.coolant-flood
+
+#  ---motion control signals---
+
+net in-position               <=  motion.in-position
+net machine-is-enabled        <=  motion.motion-enabled
+
+#  ---digital in / out signals---
+
+#  ---estop signals---
+
+net estop-out     	<=  iocontrol.0.user-enable-out
+net estop-out     	=>  iocontrol.0.emc-enable-in
+
+net 3D-probe-in		<=  hm2_5i25.0.7i76.0.0.input-04-not
+
+
+# ---probe Interrupt in signal---
+
+net toolsensor-in 	=> or2.0.in0
+net 3D-probe-in 	=> or2.0.in1
+
+net probe-signal 	<= or2.0.out 
+
+net probe-signal  	=>  motion.probe-input
