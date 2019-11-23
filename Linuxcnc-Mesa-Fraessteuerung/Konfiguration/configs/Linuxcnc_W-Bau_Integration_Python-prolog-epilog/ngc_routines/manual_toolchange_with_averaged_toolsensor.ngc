@@ -37,6 +37,7 @@ O100 endif
 
 o200 if [#<_current_tool> EQ #<_selected_tool>]
 (debug, Tool already in Spindle)
+o<manual_toolchange_with_averaged_toolsensor> endsub [1]
 M2
 o200 else 
 
@@ -182,7 +183,6 @@ O700 endif
 
 #<touch_result> = #2005
 #<probeheight> = 0
-;-152.220
 #<blockheight> = 0
 
 ;#<probeheight> = #<_hal[probe.probeheight]> 
